@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import { PostService } from 'src/app/services/post.service';
+import { SnackBarService } from 'src/app/services/snack-bar.service';
 
 
 @Component({
@@ -11,12 +13,12 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 export class DeleteComponent {
   list:Array<any> = [];
 
-  constructor(private http:HttpClient,private _snackBar:MatSnackBar){
+  constructor(private http:HttpClient,private _snackBar:SnackBarService, private postService:PostService){
 
   }
 
   ngOnInit(): void {
-    this.http.get<any>('https://jsonplaceholder.typicode.com/posts')
+    this.postService.findAll()
     .subscribe(response =>{
       console.log(response);
       this.list = response;
@@ -25,14 +27,9 @@ export class DeleteComponent {
 
   delete(id:any):void{
     if(confirm('are you sure '+id)){
-      this.http.delete<any>('https://jsonplaceholder.typicode.com/posts/'+id)
+     this.postService.delete(id)
       .subscribe(response =>{
-        this._snackBar.open('Delete','close',{
-          horizontalPosition:'end',
-          verticalPosition:'top',
-          duration:5000,
-          direction:'ltr'
-        });
+        this._snackBar.trigger('Delete','close');
       })
 
       for (let i = 0; i < this.list.length; i++) {

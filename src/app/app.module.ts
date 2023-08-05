@@ -11,10 +11,13 @@ import { DeleteComponent } from './components/delete/delete.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule  } from '@angular/material/button'
 import { MatFormFieldModule  } from '@angular/material/form-field'
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatInputModule} from "@angular/material/input";
-import {HttpClientModule}  from '@angular/common/http' 
+import {HTTP_INTERCEPTORS, HttpClientModule}  from '@angular/common/http' 
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import { LoadingComponent } from './components/loading/loading.component';
+import { HttpManagerInterceptor } from './components/interceptors/http-manager.interceptor';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,8 @@ import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
     NewComponent,
     FindComponent,
     UpdateComponent,
-    DeleteComponent
+    DeleteComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
@@ -35,9 +39,12 @@ import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
   ],
-  providers: [],
+  providers: [
+       {provide:HTTP_INTERCEPTORS, useClass:HttpManagerInterceptor,multi:true}
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
